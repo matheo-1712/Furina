@@ -219,7 +219,7 @@ module.exports = {
                         color = '#00FF00';
                         break;
                     case 'Electro':
-                        color = '#FFFF00';
+                        color = '#6b32a8';
                         break;
                     case 'Cryo':
                         color = '#00FFFF';
@@ -278,6 +278,9 @@ module.exports = {
 };
 
 async function guideImg(url) {
+
+    let imageSrc;
+
     try {
         // Envoyer une requête HTTP pour récupérer le contenu de la page
         const response = await fetch(url);
@@ -292,22 +295,49 @@ async function guideImg(url) {
         // Utiliser cheerio pour parser le HTML
         const $ = cheerio.load(html);
 
-        // Chercher toutes les balises <img> et filtrer celles dont l'attribut src contient le terme recherché
         const searchTerm = 'Infographic';
-        const image = $('img').filter((i, el) => {
-            const src = $(el).attr('src');
-            return src && src.includes(searchTerm); // Ajouter une vérification pour src
-        }).first();
 
-        // Extraire l'attribut src de la première image trouvée
-        const imageSrc = image.attr('src');
+        // Trouver le h1 contenant un span avec le mot "Infographic"
+        const h1WithSearchTerm = $('h1').filter((i, el) => {
+            return $(el).text().includes(searchTerm);
+        });
+
+        // Si le h1 est trouvé, trouver la première image après ce h1
+        let imageSrc;
+        if (h1WithSearchTerm.length > 0) {
+            // Chercher la première image dans la div suivante après le h1
+            const image = h1WithSearchTerm.first().next('div').find('img').first();
+
+            if (image.length > 0) {
+                imageSrc = image.attr('src');
+            } else {
+                console.log('Aucune image trouvée après le h1 contenant le mot Infographic.');
+            }
+        } else {
+            console.log('Aucun h1 contenant le mot Infographic trouvé.');
+        }
 
         if (imageSrc) {
             console.log('URL de l\'image trouvée:', imageSrc);
             return imageSrc;
         } else {
-            console.log('Aucune image trouvée avec le terme recherché.');
-            return 'https://cdn.discordapp.com/attachments/1273669410061684746/1273669500327428238/Sans_titre.png?ex=66bf74a8&is=66be2328&hm=071d2fe9ecd136beaa0b642a4bed42d130b587cbeb3f885ea31030ad6b3f05a8&';
+            console.log('Aucune image trouvée avec le terme recherché, lancement de la recherche d\'une image alternative...');
+            // Chercher toutes les balises <img> et filtrer celles dont l'attribut src contient le terme recherché
+            const searchTerm = 'Infographic';
+            const image = $('img').filter((i, el) => {
+                const src = $(el).attr('src');
+                return src && src.includes(searchTerm); // Ajouter une vérification pour src
+            }).first();
+
+            // Extraire l'attribut src de la première image trouvée
+            const imageSrc = image.attr('src');
+            if (imageSrc) {
+                console.log('URL de l\'image trouvée:', imageSrc);
+                return imageSrc;
+            } else {
+                console.log('Aucune image trouvée avec le terme recherché.');
+                return 'https://cdn.discordapp.com/attachments/1273669410061684746/1273669500327428238/Sans_titre.png?ex=66bf74a8&is=66be2328&hm=071d2fe9ecd136beaa0b642a4bed42d130b587cbeb3f885ea31030ad6b3f05a8&';
+            }
         }
     } catch (error) {
         console.error('Erreur lors de la récupération ou de l\'extraction:', error);
