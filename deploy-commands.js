@@ -32,7 +32,7 @@ const rest = new REST().setToken(token);
 		console.log(`[INFO] Rafraîchissement de ${commands.length} commandes (/) globales...`);
 
 		// La méthode REST#put() prend deux arguments : une route et un objet de configuration.
-		const data = await rest.put(
+		await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
 		);

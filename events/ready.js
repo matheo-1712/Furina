@@ -11,10 +11,10 @@ module.exports = {
         client.user.setActivity({
             type: ActivityType.Custom,
             name: 'customstatus',
-            state: `<:furinaNews:1272629426798071939> Je gère Genshin la !`
+            state: `La vie est comme une pièce de théâtre ; on ne sait jamais quand se produira un rebondissement.`
         });
 
-        client.user.setStatus(PresenceUpdateStatus.Idle);
+        client.user.setStatus(PresenceUpdateStatus.Online);
 
         const channelNames = ['📃logs-furina'];
         
