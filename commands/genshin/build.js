@@ -111,11 +111,9 @@ module.exports = {
     async execute(interaction) {
 
         const character = interaction.options.getString('character');
-        const ApiCharDetails = 'https://gsi.fly.dev/characters/search?name='
 
         // Variables pour le nom d'affichage du personnage et la couleur de l'embed
-        let persoAffichage = '';
-        let color = '';
+        let persoAffichage = character.charAt(0).toUpperCase() + character.slice(1);
 
         let linkGuide = `https://keqingmains.com/q/${character}-quickguide/`
         try {
@@ -125,15 +123,18 @@ module.exports = {
             if (!response.ok) {
                 // Vérifier si le statut est 404 ou un autre code d'erreur
                 if (response.status === 404) {
-                    console.log('Error 404: Page not found passage sur un lien alternatif...');
+
                     linkGuide = `https://keqingmains.com/${character}/`;
+
+                    // console.log('Error 404: Passage sur un lien alternatif...');
+                    // console.log('Nouveau lien:', linkGuide);
 
                     // Envoyer une nouvelle requête avec le lien alternatif
                     response = await fetch(linkGuide);
 
                     if (!response.ok) {
                         if (response.status === 404) {
-                            console.log('Error 404: Page not found');
+                            // console.log('Error 404: Page not found');
                             linkGuide = 'Aucun guide de build n\'a été trouvé pour ce personnage.';
                             throw new Error('Error 404: Page not found');
                         } else {
@@ -142,7 +143,7 @@ module.exports = {
                         }
                     }
                 } else {
-                    console.log('HTTP Error:', response.status);
+                    // console.log('HTTP Error:', response.status);
                     throw new Error('HTTP Error: ' + response.status);
                 }
             }
@@ -163,83 +164,17 @@ module.exports = {
                 case 'dendro-traveler':
                     persoAffichage = 'du Voyageur Dendro';
                     break;
+                case 'hydro-traveler':
+                    persoAffichage = 'du Voyageur Hydro';
+                    break;
+
                 default:
                     persoAffichage = 'de ' + character.charAt(0).toUpperCase() + character.slice(1);
                     break;
             }
 
             // Gestion de la couleur des embeds
-
-            // Structure de données pour les personnages
-            /*
-            {
-            "page": 1,
-            "results": [
-                {
-                "id": 1,
-                "name": "Amber",
-                "rarity": "4_star",
-                "weapon": "Bow",
-                "vision": "Pyro",
-                "wiki_url": "https://genshin-impact.fandom.com/wiki/Amber"
-                }
-            ],
-            "total_results": 1,
-            "total_pages": 1,
-            "supported_attributes": "name, rarity, weapon, vision, model_type, region"
-            }
-            */
-
-            try {
-                const fetch = (await import('node-fetch')).default;
-                const response = await fetch(ApiCharDetails + character.charAt(0).toUpperCase() + character.slice(1));
-                console.log('URL de l\'API:', ApiCharDetails + character.charAt(0).toUpperCase() + character.slice(1));
-
-                if (!response.ok) {
-                    console.error(`[ERROR] Erreur HTTP : ${response.status}`);
-                    throw new Error(`[ERROR] Erreur HTTP : ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                // Récupération de la vision
-                const vision = data.results[0].vision;
-                console.log('Vision:', vision);
-
-
-                // Déterminer la couleur de l'embed en fonction de la vision
-                switch (vision) {
-                    case 'Pyro':
-                        color = '#FF0000';
-                        break;
-                    case 'Hydro':
-                        color = '#0000FF';
-                        break;
-                    case 'Anemo':
-                        color = '#00FF00';
-                        break;
-                    case 'Electro':
-                        color = '#6b32a8';
-                        break;
-                    case 'Cryo':
-                        color = '#00FFFF';
-                        break;
-                    case 'Geo':
-                        color = '#FFA500';
-                        break;
-                    case 'Dendro':
-                        color = '#008000';
-                        break;
-                    default:
-                        color = '#FFFFFF';
-                        break;
-                }
-            } catch (error) {
-                console.error('[ERROR] Erreur lors de la récupération des données pour la couleur : ', error);
-                color = '#FFFFFF';
-            }
-
-
+            const color = await colorChar(character);
 
             // Répondre à l'interaction
 
@@ -259,7 +194,7 @@ module.exports = {
 
             await interaction.reply({ embeds: [embed] });
         } catch (error) {
-            console.error('[ERROR] Erreur lors de la récupération des données ou de la réponse à l\'interaction : ', error);
+            console.error('[ERROR] Erreur lors de la récupération des données ou de la réponse à l\'interaction : Personnage non trouvé.');
             // Répondre à l'interaction
             const embed = new EmbedBuilder()
                 .setTitle(`Mince, une erreur est survenue !`)
@@ -278,8 +213,6 @@ module.exports = {
 };
 
 async function guideImg(url) {
-
-    let imageSrc;
 
     try {
         // Envoyer une requête HTTP pour récupérer le contenu de la page
@@ -311,17 +244,17 @@ async function guideImg(url) {
             if (image.length > 0) {
                 imageSrc = image.attr('src');
             } else {
-                console.log('Aucune image trouvée après le h1 contenant le mot Infographic.');
+                // console.log('Aucune image trouvée après le h1 contenant le mot Infographic.');
             }
         } else {
-            console.log('Aucun h1 contenant le mot Infographic trouvé.');
+            // console.log('Aucun h1 contenant le mot Infographic trouvé.');
         }
 
         if (imageSrc) {
-            console.log('URL de l\'image trouvée:', imageSrc);
+            // console.log('URL de l\'image trouvée:', imageSrc);
             return imageSrc;
         } else {
-            console.log('Aucune image trouvée avec le terme recherché, lancement de la recherche d\'une image alternative...');
+            // console.log('Aucune image trouvée avec le terme recherché, lancement de la recherche d\'une image alternative...');
             // Chercher toutes les balises <img> et filtrer celles dont l'attribut src contient le terme recherché
             const searchTerm = 'Infographic';
             const image = $('img').filter((i, el) => {
@@ -332,14 +265,97 @@ async function guideImg(url) {
             // Extraire l'attribut src de la première image trouvée
             const imageSrc = image.attr('src');
             if (imageSrc) {
-                console.log('URL de l\'image trouvée:', imageSrc);
+                // console.log('URL de l\'image trouvée:', imageSrc);
                 return imageSrc;
             } else {
-                console.log('Aucune image trouvée avec le terme recherché.');
+                // console.log('Aucune image trouvée avec le terme recherché.');
                 return 'https://cdn.discordapp.com/attachments/1273669410061684746/1273669500327428238/Sans_titre.png?ex=66bf74a8&is=66be2328&hm=071d2fe9ecd136beaa0b642a4bed42d130b587cbeb3f885ea31030ad6b3f05a8&';
             }
         }
     } catch (error) {
         console.error('Erreur lors de la récupération ou de l\'extraction:', error);
+    }
+}
+
+async function colorChar(character) {
+
+    // Gestion de la couleur des embeds
+
+    const ApiCharDetails = 'https://gsi.fly.dev/characters/search?name='
+    let color;
+
+    // Structure de données pour les personnages
+    /*
+    {
+    "page": 1,
+    "results": [
+        {
+        "id": 1,
+        "name": "Amber",
+        "rarity": "4_star",
+        "weapon": "Bow",
+        "vision": "Pyro",
+        "wiki_url": "https://genshin-impact.fandom.com/wiki/Amber"
+        }
+    ],
+    "total_results": 1,
+    "total_pages": 1,
+    "supported_attributes": "name, rarity, weapon, vision, model_type, region"
+    }
+    */
+
+    try {
+        const fetch = (await import('node-fetch')).default;
+        const response = await fetch(ApiCharDetails + character.charAt(0).toUpperCase() + character.slice(1));
+
+        // console.log('URL de l\'API:', ApiCharDetails + character.charAt(0).toUpperCase() + character.slice(1));
+
+        if (!response.ok) {
+            console.error(`[ERROR] Erreur HTTP : ${response.status}`);
+            throw new Error(`[ERROR] Erreur HTTP : ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Récupération de la vision
+        const vision = data.results[0].vision;
+        console.log('Vision:', vision);
+
+
+        // Déterminer la couleur de l'embed en fonction de la vision
+        switch (vision) {
+            case 'Pyro':
+                color = '#FF0000';
+                break;
+            case 'Hydro':
+                color = '#0000FF';
+                break;
+            case 'Anemo':
+                color = '#00FF00';
+                break;
+            case 'Electro':
+                color = '#6b32a8';
+                break;
+            case 'Cryo':
+                color = '#00FFFF';
+                break;
+            case 'Geo':
+                color = '#FFA500';
+                break;
+            case 'Dendro':
+                color = '#008000';
+                break;
+            default:
+                color = '#FFFFFF';
+                break;
+        }
+
+        return color;
+
+    } catch (error) {
+        console.error('[ERROR] Erreur lors de la récupération des données pour la couleur : ', error);
+        color = '#FFFFFF';
+
+        return color;
     }
 }
