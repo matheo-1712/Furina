@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const cheerio = require('cheerio');
+const { imgLink, api } = require('../../configLink.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +17,7 @@ module.exports = {
 
         // Récupérer la valeur saisie par l'utilisateur
         const focusedValue = interaction.options.getFocused();
-        const ApiLink = 'https://genshin.jmp.blue/characters';
+        const ApiLink = api.charactersList;
         let name = '';
         let value = '';
 
@@ -41,18 +42,17 @@ module.exports = {
                 const input = nameDefault;
                 if (nameDefault === 'yun-jin') {
                     name = 'yun-jin'
-                } else if (nameDefault === 'traveler-anemo') {
+                } else if (nameDefault === 'anemo-traveler') {
                     name = 'Voyageur-Anemo';
                     value = 'anemo-traveler';
-                } else if (nameDefault === 'traveler-geo') {
+                } else if (nameDefault === 'geo-traveler') {
                     name = 'Voyageur-Géo';
                     value = 'geo-traveler';
-                } else if (nameDefault === 'traveler-electro') {
+                } else if (nameDefault === 'hydro-traveler') {
                     name = 'Voyageur-Électro';
                     value = 'electro-traveler';
-                } else if (nameDefault === 'traveler-dendro') {
+                } else if (nameDefault === 'electro-traveler') {
                     name = 'Voyageur-Dendro';
-                    value = 'dendro-traveler';
                 } else {
                     name = input.replace(/^.*?-(.*)$/, '$1');
                     value = name;
@@ -176,6 +176,9 @@ module.exports = {
             // Gestion de la couleur des embeds
             const color = await colorChar(character);
 
+            // Gestion de la petite image de l'embed
+
+
             // Répondre à l'interaction
 
             const embed = new EmbedBuilder()
@@ -192,6 +195,7 @@ module.exports = {
                 })
                 .setTimestamp();
 
+            console.log(`${imgLink.characterPortrait}${persoAffichage}.png`)
             await interaction.reply({ embeds: [embed] });
         } catch (error) {
             console.error('[ERROR] Erreur lors de la récupération des données ou de la réponse à l\'interaction : Personnage non trouvé.');
@@ -199,7 +203,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle(`Mince, une erreur est survenue !`)
                 .setDescription(`Aucun guide de build n'a été trouvé pour **${persoAffichage}**.\n Vous n'avez pas saisi le bon nom de personnage ou il n'y a pas de guide de build pour ce personnage.\n\n __Si ce n'est pas le cas, veuillez contacter rerebleue.__`)
-                .setImage('https://cdn.discordapp.com/attachments/1273669410061684746/1273723468122292334/image.png?ex=66bfa6eb&is=66be556b&hm=b282c74f78a3c762c1a5b2ff20345492e14c41f766e75deb3651d42ee9ca04c8&')
+                .setImage(imgLink.error)
                 .setColor("#FF0000")
                 .setFooter({
                     text: "Furina - Genshin Impact",
@@ -269,7 +273,7 @@ async function guideImg(url) {
                 return imageSrc;
             } else {
                 // console.log('Aucune image trouvée avec le terme recherché.');
-                return 'https://cdn.discordapp.com/attachments/1273669410061684746/1273669500327428238/Sans_titre.png?ex=66bf74a8&is=66be2328&hm=071d2fe9ecd136beaa0b642a4bed42d130b587cbeb3f885ea31030ad6b3f05a8&';
+                return imgLink.noInfographics;
             }
         }
     } catch (error) {
@@ -281,7 +285,7 @@ async function colorChar(character) {
 
     // Gestion de la couleur des embeds
 
-    const ApiCharDetails = 'https://gsi.fly.dev/characters/search?name='
+    const ApiCharDetails = api.charactersDetails;
     let color;
 
     // Structure de données pour les personnages
@@ -318,7 +322,7 @@ async function colorChar(character) {
         const data = await response.json();
 
         // Récupération de la vision
-        const vision = data.results[0].vision;
+        const vision = data.vision;
         console.log('Vision:', vision);
 
 
