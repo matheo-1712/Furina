@@ -1,3 +1,5 @@
+<img src="https://cdn.discordapp.com/attachments/1273665601130205320/1281610662388306081/tumblr_ac97ce01bf9d46da1f4a7cee26114b8d_820d8558_1280.gif?ex=66dc5871&is=66db06f1&hm=63eab97c6d22051c65d3c443ce8e83dea3831fc2abf2fa1515ad2dda35428151">
+
 # Furina
 
 Furina est un bot Discord spécialisé pour le jeu **Genshin Impact**.
