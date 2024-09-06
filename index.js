@@ -1,15 +1,18 @@
+// Dépendances du bot
+
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const { token } = require('./config.json');
 
-// Lancement de l'API
-
+// Dépendances de l'API
+const characterRoutes = require('./api/routes/characterRoutes');
 const express = require('express');
-
 const app = express();
 const port = 3000;
 
+// Dossier où les portraits sont stockés
+const imagesDir = path.join(__dirname, 'api/img/portraits');
 
 // Créer un nouveau client Discord
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -52,6 +55,8 @@ for (const file of eventFiles) {
 	}
 }
 
+// Connexion du client
+client.login(token);
 
 // Gestion de l'API
 
@@ -63,8 +68,15 @@ app.get('/', (req, res) => {
     res.json({ status: 'API en ligne' });
 });
 
-// Définition des routes
-const characterRoutes = require('./api/routes/characterRoutes');
+// Renvoie si le bot est en ligne
+app.get('/furina', (req, res) => {
+    res.json({ status: 'Furina est en ligne' });
+});
+
+// Route pour accéder aux images
+app.use('/portrait', express.static(imagesDir));
+
+// Routes pour l'API qui gère les personnages
 app.use('/api', characterRoutes);
 
 // Démarrage du serveur
@@ -80,6 +92,3 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Une erreur est survenue sur le serveur');
 });
-
-// Connexion du client
-client.login(token);

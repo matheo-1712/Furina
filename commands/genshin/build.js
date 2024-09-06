@@ -18,8 +18,6 @@ module.exports = {
         // Récupérer la valeur saisie par l'utilisateur
         const focusedValue = interaction.options.getFocused();
         const ApiLink = api.charactersList;
-        let name = '';
-        let value = '';
 
         try {
             const fetch = (await import('node-fetch')).default;
@@ -33,42 +31,30 @@ module.exports = {
             const data = await response.json();
             // console.log('[INFO] Les données sont récupérées avec succès ', data);
 
-            // Filtrer les éléments qui sont des chaînes valides
-            const validData = data.filter(element => typeof element === 'string' && element.trim() !== '');
-
             // Générer les choix avec vérification de la longueur du nom
-            const choices = validData.map(element => {
-                const nameDefault = element;
-                const input = nameDefault;
-                if (nameDefault === 'yun-jin') {
-                    name = 'yun-jin'
-                } else if (nameDefault === 'anemo-traveler') {
-                    name = 'Voyageur-Anemo';
-                    value = 'anemo-traveler';
-                } else if (nameDefault === 'geo-traveler') {
-                    name = 'Voyageur-Géo';
-                    value = 'geo-traveler';
-                } else if (nameDefault === 'hydro-traveler') {
-                    name = 'Voyageur-Électro';
-                    value = 'electro-traveler';
-                } else if (nameDefault === 'electro-traveler') {
-                    name = 'Voyageur-Dendro';
-                } else {
-                    name = input.replace(/^.*?-(.*)$/, '$1');
-                    value = name;
-                }
-                // Tronquer le nom si la longueur dépasse 25 caractères et mettre une majuscule au début du nom
-                const truncatedName = name.length > 25 ? name.substring(0, 25) : name.charAt(0).toUpperCase() + name.slice(1);
+            const choices = data.map(element => {
+                // Remplacer les espaces par des tirets et préparer les valeurs de base
+                const input = element;
+
+                // Tronquer le nom si la longueur dépasse 25 caractères
+                const truncatedName = input.length > 25
+                    ? input.substring(0, 25)
+                    : input;
+
+                // Mettre une majuscule au début du nom et une majuscule après chaque tiret
+                const formattedName = truncatedName
+                    .toLowerCase()          // Convertir en minuscules pour uniformité
+                    .replace(/-/g, ' ')     // Remplacer les tirets par des espaces
+                    .replace(/\b\w/g, l => l.toUpperCase()); // Mettre une majuscule après chaque espace ou début de mot
 
                 // Tronquer la valeur si la longueur dépasse 25 caractères
-                const truncatedValue = value.length > 25 ? value.substring(0, 25) : value;
+                const truncatedValue = input.length > 25 ? input.substring(0, 25) : input;
 
                 return {
-                    name: truncatedName,
+                    name: formattedName,
                     value: truncatedValue
                 };
             });
-
             // Filtrer les choix en fonction de l'entrée utilisateur, insensible à la casse
             const filtered = choices.filter(choice =>
                 choice.name.toLowerCase().startsWith(focusedValue.toLowerCase())
@@ -113,7 +99,7 @@ module.exports = {
         const character = interaction.options.getString('character');
 
         // Variables pour le nom d'affichage du personnage et la couleur de l'embed
-        let persoAffichage = character.charAt(0).toUpperCase() + character.slice(1);
+        const persoAffichage = character.charAt(0).toUpperCase() + character.slice(1);
 
         let linkGuide = `https://keqingmains.com/q/${character}-quickguide/`
         try {
@@ -149,35 +135,8 @@ module.exports = {
             }
             const guideImgLink = await guideImg(linkGuide);
 
-            // Gestion des noms d'affichage des personnages
-
-            switch (character) {
-                case 'anemo-traveler':
-                    persoAffichage = 'du Voyageur Anemo';
-                    break;
-                case 'geo-traveler':
-                    persoAffichage = 'du Voyageur Géo';
-                    break;
-                case 'electro-traveler':
-                    persoAffichage = 'du Voyageur Électro';
-                    break;
-                case 'dendro-traveler':
-                    persoAffichage = 'du Voyageur Dendro';
-                    break;
-                case 'hydro-traveler':
-                    persoAffichage = 'du Voyageur Hydro';
-                    break;
-
-                default:
-                    persoAffichage = 'de ' + character.charAt(0).toUpperCase() + character.slice(1);
-                    break;
-            }
-
-            // Gestion de la couleur des embeds
-            const color = await colorChar(character);
-
-            // Gestion de la petite image de l'embed
-
+            // Gestion de la couleur des embeds et de l'image du portrait
+            const details = await colorCharAndPortrait(character);
 
             // Répondre à l'interaction
 
@@ -188,14 +147,14 @@ module.exports = {
                 .setTitle(`Build ${persoAffichage}`)
                 .setURL(linkGuide)
                 .setImage(guideImgLink)
+                .setThumbnail(details.portrait)
                 .setDescription(`Voici un guide de build pour ${persoAffichage}.\nPour avoir accès à un guide plus complet, [ici](${linkGuide}).`)
-                .setColor(color)
+                .setColor(details.color)
                 .setFooter({
                     text: "Crédit : Keqingmains",
                 })
                 .setTimestamp();
 
-            console.log(`${imgLink.characterPortrait}${persoAffichage}.png`)
             await interaction.reply({ embeds: [embed] });
         } catch (error) {
             console.error('[ERROR] Erreur lors de la récupération des données ou de la réponse à l\'interaction : Personnage non trouvé.');
@@ -281,38 +240,15 @@ async function guideImg(url) {
     }
 }
 
-async function colorChar(character) {
-
+async function colorCharAndPortrait(character) {
     // Gestion de la couleur des embeds
-
     const ApiCharDetails = api.charactersDetails;
     let color;
-
-    // Structure de données pour les personnages
-    /*
-    {
-    "page": 1,
-    "results": [
-        {
-        "id": 1,
-        "name": "Amber",
-        "rarity": "4_star",
-        "weapon": "Bow",
-        "vision": "Pyro",
-        "wiki_url": "https://genshin-impact.fandom.com/wiki/Amber"
-        }
-    ],
-    "total_results": 1,
-    "total_pages": 1,
-    "supported_attributes": "name, rarity, weapon, vision, model_type, region"
-    }
-    */
+    let details = {};
 
     try {
         const fetch = (await import('node-fetch')).default;
         const response = await fetch(ApiCharDetails + character.charAt(0).toUpperCase() + character.slice(1));
-
-        // console.log('URL de l\'API:', ApiCharDetails + character.charAt(0).toUpperCase() + character.slice(1));
 
         if (!response.ok) {
             console.error(`[ERROR] Erreur HTTP : ${response.status}`);
@@ -321,45 +257,49 @@ async function colorChar(character) {
 
         const data = await response.json();
 
-        // Récupération de la vision
+        // Récupération de la vision et du portrait
         const vision = data.vision;
-        console.log('Vision:', vision);
-
+        const portrait = data.portrait;
 
         // Déterminer la couleur de l'embed en fonction de la vision
         switch (vision) {
             case 'Pyro':
-                color = '#FF0000';
+                color = '#ff9999';
                 break;
             case 'Hydro':
-                color = '#0000FF';
+                color = '#80c0ff';
                 break;
             case 'Anemo':
-                color = '#00FF00';
+                color = '#80ffd7';
                 break;
             case 'Electro':
-                color = '#6b32a8';
+                color = '#ffacff';
                 break;
             case 'Cryo':
-                color = '#00FFFF';
+                color = '#99ffff';
                 break;
             case 'Geo':
-                color = '#FFA500';
+                color = '#ffe699';
                 break;
             case 'Dendro':
-                color = '#008000';
+                color = '#99ff88';
                 break;
             default:
                 color = '#FFFFFF';
                 break;
         }
 
-        return color;
+        // Assigner les valeurs à l'objet details
+        details.color = color;
+        details.portrait = portrait;
+
+        return details;
 
     } catch (error) {
         console.error('[ERROR] Erreur lors de la récupération des données pour la couleur : ', error);
-        color = '#FFFFFF';
+        details.color = '#FFFFFF';
+        details.portrait = 'http://furina.antredesloutres.fr';
 
-        return color;
+        return details;
     }
 }

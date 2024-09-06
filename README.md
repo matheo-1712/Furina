@@ -1,4 +1,4 @@
-<img src="https://cdn.discordapp.com/attachments/1273665601130205320/1281610662388306081/tumblr_ac97ce01bf9d46da1f4a7cee26114b8d_820d8558_1280.gif?ex=66dc5871&is=66db06f1&hm=63eab97c6d22051c65d3c443ce8e83dea3831fc2abf2fa1515ad2dda35428151">
+<img src="./api/img/bot/banner.gif">
 
 # Furina
 
@@ -19,10 +19,43 @@ Le bot Furina permet de :
 - Gérer les UID des utilisateurs
 - Proposer de nombreuses autres fonctionnalités à venir pour améliorer l'expérience des utilisateurs
 
+Ce bot est en constante évolution et de nouvelles fonctionnalités seront ajoutées régulièrement.
+
+Il possède également ça propre API pour récupérer les données des personnages et encore plus à venir.
+
+Cette api sera disponible prochainement sur le site web du bot.
+
+[furina.antredesloutres.fr](furina.antredesloutres.fr) (encore en cours de développement)
+
 ## Installation
 
-Instructions sur la manière d'installer et de configurer le bot.
+Pour installer le bot Furina sur votre serveur Discord, vous pouvez [cliquer ici](https://discord.com/oauth2/authorize?client_id=1272615402442199135&permissions=8&integration_type=0&scope=bot).
+
+Pour lancer le bot en local, vous devez :
+
+1. Cloner le dépôt
+2. Installer les dépendances avec `npm install`
+3. Créer un fichier `config.json` à la racine du projet avec le contenu suivant :
+    
+    ```json
+    {
+        "token": "Token de votre bot",
+        "clientId": "ID de votre bot",
+        "categoryName": "Nom de la catégorie où seront créés les salons de logs du bot",
+        "roleName": "Nom du rôle qui permettra d'accéder aux commandes de logs",
+
+    }
+    ```
+4. Lancer le bot avec `node index.js`
+
 
 ## Auteur du bot
 
-Le bot Furina a été créé et est maintenu par **Perodeau Mathéo**. Vous pouvez me contacter via perod.matheo@gmail.com pour toute question ou suggestion.
+Le bot Furina a été créé et est maintenu par **Perodeau Mathéo**. Vous pouvez me contacter via perod.matheo@gmail.com pour toute question ou suggestion. 
+
+## License
+
+Non affilié à Hoyoverse ou à Discord.
+
+Libre de droit.
+```
