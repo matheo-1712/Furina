@@ -25,7 +25,7 @@ Il possède également ça propre API pour récupérer les données des personna
 
 Cette api sera disponible prochainement sur le site web du bot.
 
-[furina.antredesloutres.fr](furina.antredesloutres.fr) (encore en cours de développement)
+[furina.antredesloutres.fr](https://furina.antredesloutres.fr) (encore en cours de développement)
 
 ## Installation
 
@@ -58,4 +58,4 @@ Le bot Furina a été créé et est maintenu par **Perodeau Mathéo**. Vous pouv
 Non affilié à Hoyoverse ou à Discord.
 
 Libre de droit.
-```
+

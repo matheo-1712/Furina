@@ -7,11 +7,14 @@
     },
     "api": {
         "charactersList": "http://localhost:3000/api/characters",
-        "charactersDetails": "http://localhost:3000/api/characters/details/"
+        "charactersDetails": "http://localhost:3000/api/characters/details/",
+        "uidInfos": "https://enka.network/api/uid/"
 
     },
     "site": {
         "keqingMainsQuickGuide" : "https://keqingmains.com/q/${character}-quickguide/",
-        "keqingMainsGuide" : "https://keqingmains.com/${character}/"
+        "keqingMainsGuide" : "https://keqingmains.com/${character}/",
+        "akashaProfil": "https://akasha.cv/profile/",
+        "enkaProfil": "https://enka.network/u/"
     }
 }

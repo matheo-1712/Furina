@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const { token } = require('./config.json');
 
+const deployCommands = require('./deploy-commands');
+
 // Dépendances de l'API
 const characterRoutes = require('./api/routes/characterRoutes');
 const express = require('express');
@@ -55,6 +57,9 @@ for (const file of eventFiles) {
 	}
 }
 
+// Déploiement des commandes
+deployCommands();
+
 // Connexion du client
 client.login(token);
 
@@ -81,7 +86,7 @@ app.use('/api', characterRoutes);
 
 // Démarrage du serveur
 app.listen(port, () => {
-    console.log(`Serveur démarré sur http://localhost:${port}`);
+    // console.log(`Serveur démarré sur http://localhost:${port}`);
 });
 
 app.use((req, res) => {

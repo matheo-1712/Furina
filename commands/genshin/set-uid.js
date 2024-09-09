@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ComponentType } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { imgLink } = require('../../configLink.json');
+const { imgLink, api } = require('../../configLink.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -193,7 +193,7 @@ async function enregistrementUID(userUid, interaction) {
 
 async function verifAccountUID(uid) {
 
-    const ApiLink = `https://enka.network/api/uid/${uid}`;
+    const ApiLink = `${api.uidInfos}${uid}?info`;
 
     try {
         const fetch = (await import('node-fetch')).default;

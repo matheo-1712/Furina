@@ -1,3 +1,5 @@
+function deployCommands() {
+
 const { REST, Routes } = require('discord.js');
 const { clientId, token } = require('./config.json');
 const fs = require('node:fs');
@@ -42,3 +44,7 @@ const rest = new REST().setToken(token);
 		console.error(`[ERROR] Erreur lors du déploiement des commandes globales : ${error}`);	
 	}
 })();
+
+}
+
+module.exports = deployCommands;
