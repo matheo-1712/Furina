@@ -40,6 +40,7 @@
         { "name": "Kaveh", "weapon": "Claymore", "vision": "Dendro", "portrait": "http://localhost:3000/portrait/Kaveh.png" },
         { "name": "Kazuha", "weapon": "Sword", "vision": "Anemo", "portrait": "http://localhost:3000/portrait/Kazuha.png" },
         { "name": "Keqing", "weapon": "Sword", "vision": "Electro", "portrait": "http://localhost:3000/portrait/Keqing.png" },
+        { "name": "Kinich" , "weapon": "Claymore", "vision": "Dendro", "portrait": "http://localhost:3000/portrait/Kinich.png" },
         { "name": "Kirara", "weapon": "Sword", "vision": "Dendro", "portrait": "http://localhost:3000/portrait/Kirara.png" },
         { "name": "Klee", "weapon": "Catalyst", "vision": "Pyro", "portrait": "http://localhost:3000/portrait/Klee.png" },
         { "name": "Kokomi", "weapon": "Catalyst", "vision": "Hydro", "portrait": "http://localhost:3000/portrait/Kokomi.png" },
