@@ -55,7 +55,7 @@ module.exports = {
         // Récupérer l'avatar de l'utilisateur
         const avatar = member.user.displayAvatarURL({ format: 'png', size: 512 });
 
-        if (interaction.options.getString('détails') === 'false') {
+        if (interaction.options.getString('détails') === 'false' || !interaction.options.getString('détails')) {
             const embed = new EmbedBuilder()
                 .setTitle(`UID de ${tag}`)
                 .setDescription(`L'UID de ${member} est : ${uid}`)
@@ -91,7 +91,7 @@ module.exports = {
                 .setTitle(`Profil de ${tag}`)
                 .setURL(uidInfos.apiLink)
                 .setThumbnail(avatar)
-                .setDescription(`L'UID est : ${uid}`)
+                .setDescription(`UID :  ${uid}`)
                 .setColor('#ffffff')
                 .addFields(
                     {
@@ -110,13 +110,13 @@ module.exports = {
                         inline: false,
                     },
                     {
-                        name: 'Nombre de succès',
+                        name: 'Succès',
                         value: uidInfos.finishAchievementNum.toString(),
                         inline: true,
                     },
                     {
-                        name: 'Étage de la tour',
-                        value: `${uidInfos.towerFloorIndex.toString()}-${uidInfos.towerLevelIndex.toString()}`,
+                        name: 'Profondeurs spiralées',
+                        value: `${uidInfos.towerFloorIndex.toString()}-${uidInfos.towerLevelIndex.toString()} | ${uidInfos.towerStarIndex.toString()}<:blueStar:1286761187605745695> `,
                         inline: true,
                     },
                     {
@@ -183,12 +183,23 @@ async function uidInfo(uid) {
             return;
         }
 
+        // Récupérer les informations de l'UID
         const pseudo = playerInfo.nickname || 'Inconnu';
         const level = playerInfo.level || 'Non spécifié';
         const signature = playerInfo.signature || 'Non spécifié';
         const finishAchievementNum = playerInfo.finishAchievementNum || 'Non spécifié';
+
+        // Profondeurs spiralées
         const towerFloorIndex = playerInfo.towerFloorIndex || 'Non spécifié';
         const towerLevelIndex = playerInfo.towerLevelIndex || 'Non spécifié';
+        const towerStarIndex = playerInfo.towerStarIndex || 'Non spécifié';
+
+        // Thêatre imaginaire
+        const theaterActIndex = playerInfo.theaterActIndex || 'Non spécifié';
+        const theaterStarIndex = playerInfo.theaterStarIndex || 'Non spécifié';
+        const theaterModeIndex = playerInfo.theaterModeIndex || 'Non spécifié';
+
+
         const affiPerso = playerInfo.fetterCount || 'Non spécifié';
 
         uidInfos = {
@@ -198,8 +209,12 @@ async function uidInfo(uid) {
             finishAchievementNum: finishAchievementNum,
             towerFloorIndex: towerFloorIndex,
             towerLevelIndex: towerLevelIndex,
+            towerStarIndex: towerStarIndex,
             apiLink: ApiLink,
-            affiPerso: affiPerso
+            affiPerso: affiPerso,
+            theaterActIndex: theaterActIndex,
+            theaterStarIndex: theaterStarIndex,
+            theaterModeIndex: theaterModeIndex,
         };
 
         // Retourner les informations de l'UID

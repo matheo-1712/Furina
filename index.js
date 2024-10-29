@@ -11,10 +11,13 @@ const deployCommands = require('./deploy-commands');
 const characterRoutes = require('./api/routes/characterRoutes');
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 8081;
 
 // Dossier où les portraits sont stockés
-const imagesDir = path.join(__dirname, 'api/img/portraits');
+const imagesDirPortrait = path.join(__dirname, 'api/img/portraits');
+
+// Dossier où les infographies sont stockées
+const imagesDirInfographie = path.join(__dirname, 'api/img/infographies');
 
 // Créer un nouveau client Discord
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -64,7 +67,6 @@ deployCommands();
 client.login(token);
 
 // Gestion de l'API
-
 app.use(express.json()); // Pour les données JSON
 app.use(express.urlencoded({ extended: true })); // Pour les données URL encodées
 
@@ -79,7 +81,10 @@ app.get('/furina', (req, res) => {
 });
 
 // Route pour accéder aux images
-app.use('/portrait', express.static(imagesDir));
+app.use('/portrait', express.static(imagesDirPortrait));
+
+// Route pour accéder aux infographies
+app.use('/infographie', express.static(imagesDirInfographie));
 
 // Routes pour l'API qui gère les personnages
 app.use('/api', characterRoutes);

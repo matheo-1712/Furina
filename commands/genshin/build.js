@@ -96,7 +96,11 @@ module.exports = {
 
     async execute(interaction) {
 
+        // Récupérer le nom du personnage saisi par l'utilisateur
         const character = interaction.options.getString('character');
+
+        // Gestion de la couleur des embeds et de l'image du portrait
+        const details = await colorCharAndPortrait(character);
 
         // Variables pour le nom d'affichage du personnage et la couleur de l'embed
         const persoAffichage = character.charAt(0).toUpperCase() + character.slice(1);
@@ -133,10 +137,7 @@ module.exports = {
                     throw new Error('HTTP Error: ' + response.status);
                 }
             }
-            const guideImgLink = await guideImg(linkGuide);
-
-            // Gestion de la couleur des embeds et de l'image du portrait
-            const details = await colorCharAndPortrait(character);
+            const guideImgLink = await guideImg(linkGuide, details);
 
             // Répondre à l'interaction
 
@@ -175,7 +176,7 @@ module.exports = {
     }
 };
 
-async function guideImg(url) {
+async function guideImg(url, details) {
 
     try {
         // Envoyer une requête HTTP pour récupérer le contenu de la page
@@ -232,7 +233,9 @@ async function guideImg(url) {
                 return imageSrc;
             } else {
                 // console.log('Aucune image trouvée avec le terme recherché.');
-                return imgLink.noInfographics;
+                const noInfographics = `${imgLink.noInfographics}${details.region}.png`;
+                console.log('URL de l\'image par défaut:', noInfographics);
+                return noInfographics;
             }
         }
     } catch (error) {
@@ -257,9 +260,10 @@ async function colorCharAndPortrait(character) {
 
         const data = await response.json();
 
-        // Récupération de la vision et du portrait
+        // Récupération de la vision du portrait et la région du personnage
         const vision = data.vision;
         const portrait = data.portrait;
+        const region = data.region;
 
         // Déterminer la couleur de l'embed en fonction de la vision
         switch (vision) {
@@ -292,6 +296,7 @@ async function colorCharAndPortrait(character) {
         // Assigner les valeurs à l'objet details
         details.color = color;
         details.portrait = portrait;
+        details.region = region;
 
         return details;
 

@@ -2,12 +2,12 @@
     "imgLink": {
         "error": "https://cdn.discordapp.com/attachments/1273669410061684746/1273723468122292334/image.png?ex=66bfa6eb&is=66be556b&hm=b282c74f78a3c762c1a5b2ff20345492e14c41f766e75deb3651d42ee9ca04c8&",
         "success": "https://cdn.discordapp.com/attachments/1273669410061684746/1279101016213557410/sWgrqYLR_400x400.jpg?ex=66d33726&is=66d1e5a6&hm=96f3a3bd6bc69595f1dae78d7237a8fd6e8e58aa502c0a16c77cd8ec0e357c29&",
-        "noInfographics": "https://cdn.discordapp.com/attachments/1273669410061684746/1273669500327428238/Sans_titre.png?ex=66bf74a8&is=66be2328&hm=071d2fe9ecd136beaa0b642a4bed42d130b587cbeb3f885ea31030ad6b3f05a8&",
+        "noInfographics": "https://furina.antredesloutres.fr/infographie/default_",
         "characterPortrait": "https://library.keqingmains.com/img/characters/icon/"
     },
     "api": {
-        "charactersList": "http://localhost:3000/api/characters",
-        "charactersDetails": "http://localhost:3000/api/characters/details/",
+        "charactersList": "https://furina.antredesloutres.fr/api/characters",
+        "charactersDetails": "https://furina.antredesloutres.fr/api/characters/details/",
         "uidInfos": "https://enka.network/api/uid/"
 
     },
