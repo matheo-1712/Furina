@@ -51,7 +51,7 @@ Pour lancer le bot en local, vous devez :
 
 ## Auteur du bot
 
-Le bot Furina a été créé et est maintenu par **Perodeau Mathéo**. Vous pouvez me contacter via perod.matheo@gmail.com pour toute question ou suggestion. 
+Le bot Furina a été créé et est maintenu par **Mathéo**. Vous pouvez me contacter via perod.matheo@gmail.com pour toute question ou suggestion. 
 
 ## License
 
