@@ -1,0 +1,7 @@
+{
+	"token": "Le token de votre bot",
+	"clientId": "L'id de votre application",
+    "guildId": "",
+    "categoryName" : "Nom de la catégorie des salons du bot",
+    "roleName": "Nom du rôle admin du bot"
+}
