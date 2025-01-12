@@ -1,3 +1,5 @@
+# Actuellement, le projet a été remplacé par une nouvelle version en TypeScript : Citlali. Vous pouvez le consulter ici : [Citlali](https://github.com/matheo-1712/Citlali).
+
 <img src="./api/img/bot/banner.gif">
 
 # Furina
@@ -58,4 +60,5 @@ Le bot Furina a été créé et est maintenu par **Mathéo**. Vous pouvez me con
 Non affilié à Hoyoverse ou à Discord.
 
 Libre de droit.
+
 
